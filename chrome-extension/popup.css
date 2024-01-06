@@ -1,0 +1,42 @@
+.custom-label {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+#main-title {
+  display: flex; /* Use flexbox to align items horizontally */
+  align-items: center; /* Center items vertically */
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide content that overflows */
+  text-overflow: ellipsis; /* Display an ellipsis (...) when content is truncated */
+  margin: 0; /* Remove top margin */
+}
+
+#blurred-title,
+#advanced-title {
+  align-items: center; /* Center items vertically */
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.logo {
+  max-width: 60px; /* Set the maximum width for the logo */
+  margin-right: 10px; /* Add some space between the logo and text */
+}
+
+.red-text {
+  color: red;
+}
+
+.title h4 {
+  margin: 0; /* Remove the default margin-bottom for h4 elements */
+}
+
+.title strong {
+  align-self: center; /* Vertically center the strong element within the title container */
+}
+
+/* Additional custom styles as needed */
