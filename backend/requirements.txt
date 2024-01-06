@@ -1,0 +1,4 @@
+flask
+detoxify
+transfromers
+torch

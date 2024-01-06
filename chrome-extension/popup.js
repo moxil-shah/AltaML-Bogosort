@@ -1,7 +1,15 @@
-// script.js
-document.getElementById('toggleBlurCheckbox').addEventListener('change', () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const message = document.getElementById('toggleBlurCheckbox').checked ? 'blurText' : 'unblurText';
-        chrome.tabs.sendMessage(tabs[0].id, { message });
+document.addEventListener('DOMContentLoaded', function() {
+    const sliders = document.querySelectorAll('.form-control-range');
+  
+    sliders.forEach(function(slider) {
+      const labelId = `${slider.id}Label`;
+      console.log(labelId);
+      const label = document.getElementById(labelId);
+  
+      slider.addEventListener('input', function() {
+        const sliderValue = slider.value;
+        label.textContent = `${slider.id} | ${sliderValue}%`;
+      });
     });
-});
+  });
+  

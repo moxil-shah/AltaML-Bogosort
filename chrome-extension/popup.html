@@ -1,15 +1,48 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html>
+<link href="popup.css" rel="stylesheet" type="text/css" />
+<script type="module" src="popup.js"></script>
+<link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/css/bootstrap.min.css"
+/>
 
-<head>
-    <title>Content Moderator</title>
-</head>
+<div class="container">
+  <div class="title text-left" id="main-title">
+    <img src="assets/hate.png" alt="No Place For Hate Logo" class="logo" />
+    <h4>
+      <strong
+        >No <span class="red-text">Place</span> For
+        <span class="red-text">Hate</span></strong
+      >
+    </h4>
+  </div>
 
-<body>
-    <label for="toggleBlurCheckbox">Blur Hate Speech</label>
-    <input type="checkbox" id="toggleBlurCheckbox" checked>
-    <script src="script.js"></script>
-</body>
+  <div class="title text-left" id="blurred-title">
+    <h3>
+      Here's how many words we've <span class="red-text">blurred</span> so far:
+      x
+    </h3>
+  </div>
 
-</html>
+  <hr />
+
+  <div class="title text-left" id="advanced-title">
+    <h3><span class="red-text">Thershold</span> Settings</h3>
+  </div>
+  <div class="container mt-5">
+    <form>
+      <div class="form-group custom-label">
+        <label id="toxicLabel" for="toxic">toxic | 50%</label>
+        <input
+          type="range"
+          class="form-control-range"
+          id="toxic"
+          min="0"
+          max="100"
+        />
+      </div>
+    </form>
+  </div>
+
+  <!-- Include Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+</div>

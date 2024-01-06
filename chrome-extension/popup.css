@@ -1,53 +1,43 @@
-.container {
-width: 280px;
-color: #314d3e;
+.custom-label {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 }
 
-.title {
-font-size: 14px;
-font-weight: bold;
-padding: 8px;
+#main-title {
+  display: flex; /* Use flexbox to align items horizontally */
+  align-items: center; /* Center items vertically */
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide content that overflows */
+  text-overflow: ellipsis; /* Display an ellipsis (...) when content is truncated */
+  margin: 0; /* Remove top margin */
 }
 
-.textbox {
-width: 100%;
-font-size: 12px;
-margin: 0;
-padding: 0px 2px;
+#blurred-title,
+#advanced-title {
+  align-items: center; /* Center items vertically */
+  font-size: 13px;
+  font-weight: bold;
 }
 
-.textbox:focus {
-outline: 0;
-border-color: #66afe9;
+.logo {
+  max-width: 60px; /* Set the maximum width for the logo */
+  margin-right: 10px; /* Add some space between the logo and text */
 }
 
-.bookmarks {
-margin: 5px 5px;
-padding: 3px;
+.red-text {
+  color: red;
 }
 
-.bookmark {
-    display: flex;
-    border-bottom-color: #00254d;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-radius: 0.8rem;
-    padding: 3px;
-    padding-bottom: 7px;
-    margin-bottom: 7px;
+.title h4 {
+  margin: 0; /* Remove the default margin-bottom for h4 elements */
 }
 
-.bookmark-title {
-padding-left: 2px;
+.title strong {
+  align-self: center; /* Vertically center the strong element within the title container */
 }
 
-.bookmark-controls img {
-margin: 0 4px;
-width: 18px;
-height: 18px;
-cursor: pointer;
-}
-.bookmark-controls {
-flex: auto;
-text-align: right;
-}
+/* Additional custom styles as needed */
+
