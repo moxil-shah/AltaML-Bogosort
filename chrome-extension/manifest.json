@@ -1,0 +1,21 @@
+{
+    "name": "Content Moderation Helper",
+    "version": "0.1.0",
+    "description": "Finetune your browsing experience!",
+    "permissions": ["storage", "tabs"],
+    "host_permissions": ["https://*/"],
+    "background": {
+      "service_worker": "backgroundScript.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*/"],
+        "js": ["contentScript.js"]
+      }
+    ],
+    "action": {
+      "default_title": "Content Moderation",
+      "default_popup": "popup.html"
+    },
+    "manifest_version": 3
+}
