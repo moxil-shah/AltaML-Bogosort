@@ -11,15 +11,20 @@ tokenizer = AutoTokenizer.from_pretrained("./moderation_model/")
 def predict():
     try:
         data = request.get_json()
-        text = data['content']
+        texts = data['content']
 
-        inputs = tokenizer(text, return_tensors="pt")
+        inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
         outputs = model(**inputs)
         probs = softmax(outputs.logits, dim=-1)
         labels = model.config.id2label
-        response = [{label: prob.item()} for label, prob in zip(labels.values(), probs[0])]
 
-        return jsonify(response)
+        responses = []
+
+        for i, text_probs in enumerate(probs):
+            response = {label: prob.item() for label, prob in zip(labels.values(), text_probs)}
+            responses.append({f"Text {i + 1}": response})
+
+        return jsonify(responses)
 
     except Exception as e:
         return jsonify({'error': str(e)})
