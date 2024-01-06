@@ -5,12 +5,12 @@
     "permissions": ["storage", "tabs"],
     "host_permissions": ["https://*/"],
     "background": {
-      "service_worker": "backgroundScript.js"
+      "service_worker": "scripts/backgroundScript.js"
     },
     "content_scripts": [
       {
-        "matches": ["https://*/"],
-        "js": ["contentScript.js"]
+        "matches": ["<all_urls>"],
+        "js": ["scripts/contentScript.js"]
       }
     ],
     "action": {
