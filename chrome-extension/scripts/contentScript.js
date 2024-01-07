@@ -109,6 +109,7 @@ class CheckBadEngine {
                     // element.style.color = "transparent";
                     // element.style.textShadow = "0 0 8px #000";
                     element.classList.add("content-block-hidden");
+
                     // store as a counter in sync storage
                     chrome.storage.sync.get("counter", function (result) {
                         if (result.counter) {
