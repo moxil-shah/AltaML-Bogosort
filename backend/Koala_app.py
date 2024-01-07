@@ -13,7 +13,7 @@ import aiohttp
 # app = Flask(__name__)
 # CORS(app, supports_credentials= True, allow_headers=['Content-Type', 'Accept'])
 app = FastAPI()
-
+MAX_ELEMENT_LENGTH = 150
 origins = ["*"]
 
 app.add_middleware(
@@ -79,6 +79,11 @@ async def predict(item: Item):
         texts = item.content
 
         print("Starting prediction", texts)
+        
+        # truncate long text strings
+        for i, text in enumerate(texts):
+            if len(text) > MAX_ELEMENT_LENGTH:
+                texts[i] = text[:MAX_ELEMENT_LENGTH]
 
         responses = await hate_speech(texts)
         # response = await integrity_check(texts)

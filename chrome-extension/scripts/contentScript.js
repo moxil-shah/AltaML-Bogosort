@@ -1,6 +1,5 @@
 const BACKEND_URL = "http://127.0.0.1:8000";
 const BATCH_SIZE = 30;
-const MAX_ELEMENT_LENGTH = 150;
 let globalCurrTask;
 // store a local set of the textelements to parse
 let uniqueTextElements = new Set();
@@ -170,13 +169,6 @@ function filterTextElements(textElements) {
             (!uniqueElementTexts.has(element.textContent) && element.textContent.split(" ").length > 5)) { // for reddit copypastas where people copy the same text multiple times
             uniqueElements.push(element);
             uniqueElementTexts.add(element.textContent);
-        }
-    }
-
-    // truncate long strings
-    for (const element of uniqueElements) {
-        if (element.textContent.length > MAX_ELEMENT_LENGTH) {
-            element.textContent = element.textContent.substring(0, MAX_ELEMENT_LENGTH);
         }
     }
 
