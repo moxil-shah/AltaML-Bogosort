@@ -51,11 +51,7 @@ function filterTextElements(textElements) {
   return uniqueElements;
 }
 
-function observeTextElements() {
-  let textElements = document.querySelectorAll(
-      'h1, h2, h3, h4, h5, p, li, td, caption, span, a');
-  textElements = filterTextElements(textElements);
-
+function updateCache(textElements) {
   chrome.storage.local.get(['cachedTextElements']).then((result) => {
     if (result) {
       console.log('Value currently is ', result);
@@ -77,7 +73,16 @@ function observeTextElements() {
       console.log('Cached text elements not found in storage.');
     }
   });
-  
+}
+
+
+function observeTextElements() {
+  let textElements = document.querySelectorAll(
+      'h1, h2, h3, h4, h5, p, li, td, caption, span, a');
+  textElements = filterTextElements(textElements);
+  updateCache(textElements);
+
+
   return textElements;
 }
 
