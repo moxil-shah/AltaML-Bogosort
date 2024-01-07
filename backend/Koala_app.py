@@ -1,5 +1,3 @@
-# from flask import Flask, request, jsonify
-# from flask_cors import CORS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -10,8 +8,6 @@ import json
 import asyncio
 import aiohttp
 
-# app = Flask(__name__)
-# CORS(app, supports_credentials= True, allow_headers=['Content-Type', 'Accept'])
 app = FastAPI()
 
 origins = ["*"]

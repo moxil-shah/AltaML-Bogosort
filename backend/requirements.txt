@@ -1,5 +1,6 @@
-flask
-flask_cors
-detoxify
 transformers
 torch
+asyncio
+aiohttp
+uvicorn
+fastapi
