@@ -1,0 +1,23 @@
+import requests
+
+url = "https://gpt-content-detector.p.rapidapi.com/"
+
+# sentence_lst = ["CN tower is 5 feet tall","Whale is largest water animal."]
+sentence_lst = ["CN tower is 5 feet tall.", "Whale is the largest water animal."]
+joined_string = " ".join(sentence_lst)
+# print(joined_string)
+
+# querystring = {"text":'''When the CN Tower opened in 1976, there were three public observation points: the SkyPod (then known as the Space Deck) that stands at 447 m (1,467 ft), the Indoor Observation Level (later named Indoor Lookout Level) at 346 m (1,135 ft), and the Outdoor Observation Terrace (at the same level as the Glass Floor) at 342 m (1,122 ft).[5][19] One floor above the Indoor Observation Level was the Top of Toronto Restaurant, which completed a revolution once every 72 minutes.[25] The tower would garner worldwide media attention when stuntman Dar Robinson jumped off the CN Tower on two occasions in 1979 and 1980. The first was for a scene from the movie Highpoint, in which Robinson received CA$250,000 ($885,000 in 2021 dollars)[23] for the stunt. The second was for a personal documentary. The first stunt had him use a parachute which he deployed three seconds before impact with the ground, while the second one used a wire decelerator attached to his back.[26] On June 26, 1986, the tenth anniversary of the tower's opening, high-rise firefighting and rescue advocate Dan Goodwin, in a sponsored publicity event, used his hands and feet to climb the outside of the tower, a feat he performed twice on the same day. Following both ascents, he used multiple rappels to descend to the ground.[27] From 1985 to 1992, the CN Tower basement level hosted the world's first flight simulator ride, Tour of the Universe. The ride was replaced in 1992 with a similar attraction entitled "Space Race." It was later dismantled and replaced by two other rides in 1998 and 1999. The 1990s and 2000s A glass floor at an elevation of 342 m (1,122 ft) was installed in 1994.[19] Canadian National Railway sold the tower to Canada Lands Company prior to privatizing the company in 1995, when it divested all operations not directly related to its core freight shipping businesses. The tower's name and wordmark were adjusted to remove the CN railways logo, and the tower was renamed Canada's National Tower (from Canadian National Tower),[28] though the tower is commonly called the CN Tower. Further changes were made from 1997 to January 2004: TrizecHahn Corporation managed the tower and instituted several expansion projects including a CA$26 million entertainment expansion, the 1997 addition of two new elevators (to a total of six) and the consequential relocation of the staircase from the north side leg to inside the core of the building, a conversion that also added nine stairs to the climb. TrizecHahn also owned the Willis Tower (Sears Tower at the time) in Chicago approximately at the same time. In 2007, light-emitting diode (LED) lights replaced the incandescent lights that lit the CN Tower at night. This was done to take advantage of the cost savings of LED lights over incandescent lights. The colour of the LED lights can change, compared to the constant white colour of the incandescent lights. On September 12, 2007, Burj Khalifa, then under construction and known as Burj Dubai, surpassed the CN Tower as the world's tallest free-standing structure.[29] In 2008, glass panels were installed in one of the CN Tower elevators, which established a world record (346 m) for highest glass floor panelled elevator in the world.'''}
+# querystring = {"text":'''CN tower is 5 feet tall.'''}
+# querystring = {"text":'''In August 1974, construction of the main level commenced. Using 45 hydraulic jacks attached to cables strung from a temporary steel crown anchored to the top of the tower, twelve giant steel and wooden bracket forms were slowly raised, ultimately taking about a week to crawl up to their final position. These forms were used to create the brackets that support the main level, as well as a base for the construction of the main level itself. The Space Deck (currently named SkyPod) was built of concrete poured into a wooden frame attached to rebar at the lower level deck, and then reinforced with a large steel compression band around the outside'''}
+
+querystring = {"text":joined_string}
+
+headers = {
+	"X-RapidAPI-Key": "8eac8447f3msh6cd12e96b201777p1485c4jsn81de8b8aedca",
+	"X-RapidAPI-Host": "gpt-content-detector.p.rapidapi.com"
+}
+
+response = requests.get(url, headers=headers, params=querystring)
+
+print(response.json())

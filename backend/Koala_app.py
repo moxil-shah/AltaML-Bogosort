@@ -11,7 +11,7 @@ tokenizer = AutoTokenizer.from_pretrained("./moderation_model/")
 def predict():
     try:
         data = request.get_json()
-        texts = data['content']
+        texts = data['texts']
 
         inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
         outputs = model(**inputs)
