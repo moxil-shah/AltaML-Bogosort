@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "description": "Finetune your browsing experience!",
     "permissions": ["storage", "tabs"],
-    "host_permissions": ["https://*/"],
+    "host_permissions": ["https://*/", "http://*/"],
     "background": {
       "service_worker": "scripts/backgroundScript.js"
     },

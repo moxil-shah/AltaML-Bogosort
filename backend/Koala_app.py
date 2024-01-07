@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from torch.nn.functional import softmax
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 app = Flask(__name__)
+CORS(app, supports_credentials= True, allow_headers=['Content-Type', 'Accept'])
 
 model = AutoModelForSequenceClassification.from_pretrained("./moderation_model/")
 tokenizer = AutoTokenizer.from_pretrained("./moderation_model/")
