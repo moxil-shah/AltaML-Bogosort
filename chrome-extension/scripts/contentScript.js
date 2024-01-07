@@ -37,40 +37,48 @@ function filterTextElements(textElements) {
     }
   }
 
-  return returnElements;
+  // remove duplicates from returnElements
+  let uniqueElements = [];
+  let uniqueElementTexts = [];
+  for (let i = 0; i < returnElements.length; i++) {
+    let e = returnElements[i];
+    if (!uniqueElementTexts.includes(e.textContent)) {
+      uniqueElements.push(e);
+      uniqueElementTexts.push(e.textContent);
+    }
+  }
+
+  return uniqueElements;
 }
 
 function observeTextElements() {
   let textElements = document.querySelectorAll(
-      'h1, h2, h3, h4, h5, p, li, td, caption, span, a');  // Add more elements
-  // as needed
+      'h1, h2, h3, h4, h5, p, li, td, caption, span, a');
   textElements = filterTextElements(textElements);
-  // take first 10 elements
-  textElements = textElements.slice(0, 2);
-  console.log(textElements);
 
+  chrome.storage.local.get(['cachedTextElements']).then((result) => {
+    if (result) {
+      console.log('Value currently is ', result);
 
-  let promise = chrome.storage.sync.get(['cachedTextElements'])
+      // only set elements if they are different from the cached elements
+      for (let i = 0; i < textElements.length; i++) {
+        let e = textElements[i];
+        if (!result.cachedTextElements.includes(e.textContent)) {
+          result.cachedTextElements.push(e.textContent);
+        } else {
+          textElements.splice(i, 1);
+        }
+      }
 
-  Promise.resolve(promise).then((result) => {
-    if (result && result.cachedTextElements) {
-      console.log('Value currently is ', result.cachedTextElements);
-      //   for (let i = 0; i < result.cachedTextElements.length; i++) {
-      //     let e = result.cachedTextElements[i];
-      //     console.log(e);
-      //   }
+      chrome.storage.local.set(
+          {'cachedTextElements': result.cachedTextElements});
+
     } else {
       console.log('Cached text elements not found in storage.');
     }
   });
-
-  chrome.storage.sync.set({'cachedTextElements': textElements})
-      .then(() => {
-        console.log('Value is set');
-        // Any code that relies on the completion of set operation should be
-        // placed here.
-      })
-      .catch(error => console.error(error));
+  
+  return textElements;
 }
 
 function handleDomChanges(mutations) {
