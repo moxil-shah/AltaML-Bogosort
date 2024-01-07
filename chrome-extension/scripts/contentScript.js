@@ -106,9 +106,10 @@ class CheckBadEngine {
                 if (el[metric] > threshold) {
                     // hide the element
                     console.log("Hiding element: ", element.textContent);
-                    element.style.filter = "blur(8px)";
-                    element.style.color = "transparent";
-                    element.style.textShadow = "0 0 8px #000";
+                    // element.style.filter = "blur(8px)";
+                    // element.style.color = "transparent";
+                    // element.style.textShadow = "0 0 8px #000";
+                    element.classList.add("content-block-hidden");
                     // store as a counter in sync storage
                     chrome.storage.sync.get("counter", function (result) {
                         if (result.counter) {
@@ -133,9 +134,7 @@ class CheckBadEngine {
         console.log("Sizes: queue:", this.queue.length, ", done: ", this.doneQueue.length)
         // unblur all elements
         this.doneQueue.forEach((element) => {
-            element.style.filter = "";
-            element.style.color = "";
-            element.style.textShadow = "";
+            element.classList.remove("content-block-hidden");
         });
         // move elements from the done queue back to the queue
         this.queue.push(...this.doneQueue);
@@ -225,7 +224,7 @@ function updateCache(textElements) {
 
 function observeTextElements() {
     let textElements = document.querySelectorAll(
-        "h1, h2, h3, h4, h5, p, li, td, caption, span, a"
+        "h1, h2, h3, h4, h5, p, li, td, caption, span"
     );
 
     // filter out texteleements that are already queued up to parse
