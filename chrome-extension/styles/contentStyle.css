@@ -1,0 +1,15 @@
+.content-block-hidden {
+    filter: blur(8px);
+    color: transparent;
+    text-shadow: 0 0 8px #000;
+    border: 2px solid red;
+}
+
+/* hover to undo */
+.content-block-hidden:hover {
+    filter: none;
+    color: inherit;
+    text-shadow: none;
+    border: none;
+}
+
