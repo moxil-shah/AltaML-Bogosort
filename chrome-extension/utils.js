@@ -1,9 +1,11 @@
+const BACKEND_URL = "http://localhost:5000";
+
 export async function getActiveTabURL() {
-    const tabs = await chrome.tabs.query({
-        currentWindow: true,
-        active: true
-    });
-    return tabs[0];
+  const tabs = await chrome.tabs.query({
+    currentWindow: true,
+    active: true,
+  });
+  return tabs[0];
 }
 
 /*
@@ -14,31 +16,38 @@ export async function getActiveTabURL() {
 */
 
 class BatchRequestProcessor {
-    constructor(batchSize, asyncFunction) {
-      this.batchSize = batchSize;
-      this.asyncFunction = asyncFunction;
+  constructor(batchSize, asyncFunction) {
+    this.batchSize = batchSize;
+    this.asyncFunction = asyncFunction;
+    this.queue = [];
+  }
+
+  addToQueue(element) {
+    this.queue.push(element);
+    if (this.queue.length === this.batchSize) {
+      this.processQueue(this.queue);
       this.queue = [];
-    }
-  
-    addToQueue(element) {
-      this.queue.push(element);
-      if (this.queue.length === this.batchSize) {
-        this.processQueue();
-      }
-    }
-  
-    async processQueue() {
-      if (this.queue.length > 0) {
-        try {
-          // Call the async function with the batched elements
-          await this.asyncFunction(this.queue);
-  
-          // Clear the queue after processing
-          this.queue = [];
-        } catch (error) {
-          console.error('Error processing batch:', error);
-        }
-      }
     }
   }
 
+  // async processQueue(nodeElements=[]) {
+
+  //   // post request with body
+  //   const results = await fetch(BACKEND_URL + "/predict", {
+  //     method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ content: nodeElements.map(e => e.textContent.trim())})
+  //   }).then(res => res.json());
+
+  //   for (let i = 0; i < nodeElements.length; i++) {
+  //     const { }
+  //   }
+
+
+
+  // }
+
+}
