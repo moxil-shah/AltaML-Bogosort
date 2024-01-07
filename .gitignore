@@ -1,3 +1,4 @@
 backend/venv/
 backend/model_moderation/
 backend/moderation_model/
+.DS_Store

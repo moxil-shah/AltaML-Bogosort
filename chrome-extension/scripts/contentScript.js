@@ -18,7 +18,7 @@ function handleScroll() {
   scrollTimeout = setTimeout(() => {
     isScrolling = false;
     observeTextElements();
-  }, 200); // Adjust the timeout duration as needed
+  }, 200);  // Adjust the timeout duration as needed
 }
 
 let batch = [];
@@ -27,24 +27,58 @@ function batchTextElements(elementToBatch) {
 }
 
 function filterTextElements(textElements) {
-  return textElements.filter((e) => e.textContent.length > 1);
+  let returnElements = [];
+
+  // Filter out elements that are too small
+  for (let i = 0; i < textElements.length; i++) {
+    let e = textElements[i];
+    if (e.textContent.length > 1) {
+      returnElements.push(e);
+    }
+  }
+
+  // remove duplicates from returnElements
+  let uniqueElements = [];
+  let uniqueElementTexts = [];
+  for (let i = 0; i < returnElements.length; i++) {
+    let e = returnElements[i];
+    if (!uniqueElementTexts.includes(e.textContent)) {
+      uniqueElements.push(e);
+      uniqueElementTexts.push(e.textContent);
+    }
+  }
+
+  return uniqueElements;
 }
 
 function observeTextElements() {
-  const textElements = document.querySelectorAll(
-    "h1, h2, h3, h4, h5, p, li, td, caption, span, a"
-  ); // Add more elements as needed
+  let textElements = document.querySelectorAll(
+      'h1, h2, h3, h4, h5, p, li, td, caption, span, a');
   textElements = filterTextElements(textElements);
 
-  chrome.storage.local.get(["cachedTextElements"]).then((result) => {
-    console.log("Value currently is " + result.key);
-  });
+  chrome.storage.local.get(['cachedTextElements']).then((result) => {
+    if (result) {
+      console.log('Value currently is ', result);
 
-  chrome.storage.local.set({ cachedTextElements: textElements }).then(() => {
-    console.log("Value is set");
-  });
+      // only set elements if they are different from the cached elements
+      for (let i = 0; i < textElements.length; i++) {
+        let e = textElements[i];
+        if (!result.cachedTextElements.includes(e.textContent)) {
+          result.cachedTextElements.push(e.textContent);
+        } else {
+          textElements.splice(i, 1);
+        }
+      }
 
-  textElements.forEach((e) => console.log(e.textContent));
+      chrome.storage.local.set(
+          {'cachedTextElements': result.cachedTextElements});
+
+    } else {
+      console.log('Cached text elements not found in storage.');
+    }
+  });
+  
+  return textElements;
 }
 
 function handleDomChanges(mutations) {
@@ -61,9 +95,13 @@ function handleDomChanges(mutations) {
 
 // Add a MutationObserver to monitor DOM changes
 const observer = new MutationObserver(handleDomChanges);
-const observerConfig = { childList: true, subtree: true };
+const observerConfig = {
+  childList: true,
+  subtree: true
+};
 observer.observe(document.body, observerConfig);
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded')
   observeTextElements();
 });
