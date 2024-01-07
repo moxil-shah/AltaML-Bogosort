@@ -1,14 +1,3 @@
-/*
-==============
-
-[ E1, E2, ... ]
-
-fetch(url, body: {[E.textContent for E in EE]})
-
-= [{},{},{}]
-
-*/
-
 const BACKEND_URL = "http://127.0.0.1:8000";
 const BATCH_SIZE = 30;
 const MAX_ELEMENT_LENGTH = 150;
@@ -19,8 +8,19 @@ let uniqueTextElements = new Set();
 class CheckBadEngine {
     constructor(batchSize) {
         this.batchSize = batchSize;
-        this.userThresholds = [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3];
+        // in order of S, H, V, HR, SH, S3, H2, V2
+        this.userThresholds = {
+            "S": 0.3,
+            "H": 0.3,
+            "V": 0.3,
+            "HR": 0.3,
+            "SH": 0.3,
+            "S3": 0.3,
+            "H2": 0.3,
+            "V2": 0.3
+        };
         this.queue = [];
+        this.doneQueue = [];
         this.isProcessing = false;
     }
 
@@ -48,6 +48,7 @@ class CheckBadEngine {
                 console.log("Error: ", e);
             } finally {
                 this.isProcessing = false;
+                this.doneQueue.push(...nodeElements);
             }
         }
     }
@@ -99,31 +100,48 @@ class CheckBadEngine {
     }
 
     blurElementIfBad(result, element) {
-        // check if any of the results exceed the user thresholds
-        const metrics = ["S", "H", "V", "HR", "SH", "S3", "H2", "V2"];
-        let hidden = false;
-
         // compare to user thresholds
         Object.values(result).forEach((el) => {
-            metrics.forEach((m, i) => {
-                if (el[m] > this.userThresholds[i]) {
-                    hidden = true;
+            Object.entries(this.userThresholds).forEach(([metric, threshold], i) => {
+                if (el[metric] > threshold) {
+                    // hide the element
+                    console.log("Hiding element: ", element.textContent);
+                    element.style.filter = "blur(8px)";
+                    element.style.color = "transparent";
+                    element.style.textShadow = "0 0 8px #000";
+                    // store as a counter in sync storage
+                    chrome.storage.sync.get("counter", function (result) {
+                        if (result.counter) {
+                            result.counter += 1;
+                        } else {
+                            result.counter = 1;
+                        }
+                        chrome.storage.sync.set({
+                            counter: result.counter,
+                        });
+                    });
+
                     return;
                 }
             });
         });
-
-        // if any of the results are bad, blur the element
-        if (hidden) {
-            console.log("Hiding element: ", element.textContent);
-            element.style.filter = "blur(8px)";
-            element.style.color = "transparent";
-            element.style.textShadow = "0 0 8px #000";
-        }
     }
 
     setThresholds(thresholds) {
         this.userThresholds = thresholds;
+        console.log("Thresholds updated: ", this.userThresholds);
+        console.log("Sizes: queue:", this.queue.length, ", done: ", this.doneQueue.length)
+        // unblur all elements
+        this.doneQueue.forEach((element) => {
+            element.style.filter = "";
+            element.style.color = "";
+            element.style.textShadow = "";
+        });
+        // move elements from the done queue back to the queue
+        this.queue.push(...this.doneQueue);
+        this.doneQueue = [];
+        // process the queue again
+        this.processQueueScheduler();
     }
 }
 
@@ -205,8 +223,6 @@ function updateCache(textElements) {
     });
 }
 
-
-
 function observeTextElements() {
     let textElements = document.querySelectorAll(
         "h1, h2, h3, h4, h5, p, li, td, caption, span, a"
@@ -246,13 +262,42 @@ const observerConfig = {
 };
 observer.observe(document.body, observerConfig);
 
+
+// Debounce function to limit the rate of function execution
+function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+// Listen for slider updates with debouncing
+chrome.runtime.onMessage.addListener(debounce(function (request, sender, sendResponse) {
+    if (request.message === "sliderUpdated") {
+        chrome.storage.sync.get("sliderDic", function (result) {
+            if (result.sliderDic) {
+                sliderDic = result.sliderDic;
+                thresholdObject = {
+                    "S": sliderDic["sexual"] / 100,
+                    "H": sliderDic["hate"] / 100,
+                    "V": sliderDic["violence"] / 100,
+                    "HR": sliderDic["harassment"] / 100,
+                    "SH": sliderDic["self-harm"] / 100,
+                    "S3": sliderDic["sexual & minors"] / 100,
+                    "H2": sliderDic["hate & threatening"] / 100,
+                    "V2": sliderDic["violence & graphic"] / 100
+                };
+
+                checkEngine.setThresholds(thresholdObject);
+            }
+        });
+    }
+}, 500)); 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     observeTextElements();
-
-    chrome.storage.sync.get("sliderDic", function (result) {
-        if (result.sliderDic) {
-            console.log("sliderDic found in storage: ", result.sliderDic);
-            checkEngine.setThresholds(Object.values(result.sliderDic));
-        }
-    });
 });

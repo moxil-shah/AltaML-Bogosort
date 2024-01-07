@@ -49,9 +49,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Save sliderDic to Chrome storage
                 saveToStorage();
+
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        message: "sliderUpdated",
+                        sliderDic: sliderDic,
+                    });
+                });
+
             }, 5); // Adjust the delay as needed.
 
             slider.addEventListener("input", debouncedInput);
         });
     });
 });
+
+// get value for blurred-count p tag from chrome sync storage
+chrome.storage.sync.get("counter", function (result) {
+    if (result["counter"]) {
+        const blurredCounter = document.getElementById("blurred-count");
+        blurredCounter.textContent = result["counter"];
+    }
+});
+
