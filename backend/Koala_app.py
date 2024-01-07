@@ -1,3 +1,5 @@
+# from flask import Flask, request, jsonify
+# from flask_cors import CORS
 from fastapi import FastAPI
 from pydantic import BaseModel
 from torch.nn.functional import softmax
@@ -7,6 +9,8 @@ import json
 import asyncio
 import aiohttp
 
+# app = Flask(__name__)
+# CORS(app, supports_credentials= True, allow_headers=['Content-Type', 'Accept'])
 app = FastAPI()
 
 model = AutoModelForSequenceClassification.from_pretrained("./moderation_model/")
